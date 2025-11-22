@@ -1,10 +1,11 @@
 # Convenience variable
-set here         $::quartus(qip_path)
-set common_dir   [file normalize [file join $here ../common/bladerf]]
-set altera_ip    [file normalize [file join $here ../../ip/altera]]
-set adi_ip       [file normalize [file join $here ../../ip/analogdevicesinc]]
-set nuand_ip     [file normalize [file join $here ../../ip/nuand]]
-set opencores_ip [file normalize [file join $here ../../ip/opencores]]
+set here               $::quartus(qip_path)
+set common_dir         [file normalize [file join $here ../common/bladerf]]
+set altera_ip          [file normalize [file join $here ../../ip/altera]]
+set adi_ip             [file normalize [file join $here ../../ip/analogdevicesinc]]
+set nuand_ip           [file normalize [file join $here ../../ip/nuand]]
+set acceleratedtech_ip [file normalize [file join $here ../../ip/acceleratedtech]]
+set opencores_ip       [file normalize [file join $here ../../ip/opencores]]
 
 # Altera IP
 set_global_assignment -name VHDL_FILE    [file normalize [file join $altera_ip common_dcfifo/common_dcfifo.vhd]]
@@ -33,13 +34,15 @@ set_global_assignment -name VHDL_FILE [file normalize [file join $nuand_ip trigg
 set_global_assignment -name QIP_FILE  [file normalize [file join $nuand_ip pll_reset/pll_reset.qip]]
 set_global_assignment -name VHDL_FILE [file normalize [file join $nuand_ip ps_sync/vhdl/ps_sync.vhd]]
 
+# Accelerated Tech IP
+set_global_assignment -name VERILOG_FILE [file normalize [file join $acceleratedtech_ip ble_8bit_gain.v]]
+
 # Implementation Details
 set_global_assignment -name VHDL_FILE [file normalize [file join $common_dir vhdl/fx3_gpif_p.vhd]]
 set_global_assignment -name VHDL_FILE [file normalize [file join $common_dir vhdl/fx3_gpif.vhd]]
 set_global_assignment -name VHDL_FILE [file normalize [file join $here vhdl/tx.vhd]]
 set_global_assignment -name VHDL_FILE [file normalize [file join $here vhdl/rx-ble.vhd]]
 set_global_assignment -name VHDL_FILE [file normalize [file join $here vhdl/bladerf-ble.vhd]]
-set_global_assignment -name VERILOG_FILE [file normalize [file join $here vhdl/ble_8bit_gain.v]]
 set_global_assignment -name QIP_FILE  [file normalize                  nios_system/synthesis/nios_system.qip]
 
 # Explicitly include Nios mem_init
