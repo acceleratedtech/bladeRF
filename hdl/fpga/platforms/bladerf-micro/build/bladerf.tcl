@@ -75,7 +75,7 @@ set_global_assignment -name PHYSICAL_SYNTHESIS_COMBO_LOGIC          ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_RETIMING    ON
 set_global_assignment -name SYNTH_PROTECT_SDC_CONSTRAINT            ON
-set_global_assignment -name QII_AUTO_PACKED_REGISTERS               "SPARSE AUTO"
+#set_global_assignment -name QII_AUTO_PACKED_REGISTERS               "SPARSE AUTO"
 set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT               NORMAL
 set_global_assignment -name SYNTHESIS_EFFORT                        AUTO
 
@@ -123,6 +123,9 @@ make_revision foxhunt
 
 # Create the wlan
 make_revision wlan
+
+# Accelerated Tech BLE frontend
+make_revision ble
 
 
 # Projects created!
