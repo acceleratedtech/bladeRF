@@ -63,16 +63,24 @@ class FirGain(LiteXModule):
             
             d_delay = ndelay
         
-        q_sum = sum([Cat(x, Constant(1)) for x in qs])
+        q_sum = sum([Cat(x, Constant(0)) for x in qs])
         for _ in range(self.PIPE_STAGES):
             nq_sum = Signal((self.OUP_BITS, True))
             self.sync += If(ce, nq_sum.eq(q_sum))
-            q_sum = nq_sum[:-1]
+            q_sum = nq_sum
         
-        q_trim = q_sum[-self.FINAL_BITS:]
-        self.q = Mux((q_trim[-1] != q_trim[-2]) | (q_trim[-1] != q_trim[-3]) | (q_trim[-1] != q_trim[-4]) | (q_trim[-1] != q_trim[-5]),
-                     Mux(q_trim[-1], 0xFFF, 0x000),
-                     q_sum[4:4+self.INP_BITS])
+        q_trim = q_sum[-self.FINAL_BITS-1:]
+
+        # round nearest
+        q_round = Signal(self.FINAL_BITS)
+        self.sync += If(ce, q_round.eq(q_trim[1:] + q_trim[0]))
+        
+        # and this is DEFINITELY not symbolically correct!
+        self.q = Mux((q_round[-1] != q_round[-2]) | (q_round[-1] != q_round[-3]) | (q_round[-1] != q_round[-4]) | (q_round[-1] != q_round[-5]),
+                     Mux(q_round[-1], 0x800, 0x7FF),
+                     q_round[:self.INP_BITS])
+
+
 
 STREAM_TYPE = [('v', 1), ('i', 16), ('q', 16)]
 

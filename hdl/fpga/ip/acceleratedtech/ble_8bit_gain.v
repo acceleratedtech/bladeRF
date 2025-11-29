@@ -9,7 +9,7 @@
 // Filename   : ble_8bit_gain.v
 // Device     : Unknown
 // LiteX sha1 : --------
-// Date       : 2025-11-29 14:35:46
+// Date       : 2025-11-29 15:17:03
 //------------------------------------------------------------------------------
 
 `timescale 1ns / 1ps
@@ -46,38 +46,6 @@ module ble_8bit_gain (
 // Signals
 //------------------------------------------------------------------------------
 
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy0;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy1;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy10;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy11;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy12;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy13;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy14;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy15;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy2;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy3;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy4;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy5;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy6;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy7;
-wire   [15:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy8;
-wire   [18:0] complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy9;
-wire   [18:0] complexslicelowerer_complexslicelowerer_rhs_slice_proxy0;
-wire   [18:0] complexslicelowerer_complexslicelowerer_rhs_slice_proxy1;
-wire   [18:0] complexslicelowerer_complexslicelowerer_rhs_slice_proxy2;
-wire   [18:0] complexslicelowerer_complexslicelowerer_rhs_slice_proxy3;
-wire   [15:0] complexslicelowerer_complexslicelowerer_slice_proxy0;
-wire   [15:0] complexslicelowerer_complexslicelowerer_slice_proxy1;
-wire   [15:0] complexslicelowerer_complexslicelowerer_slice_proxy2;
-wire   [15:0] complexslicelowerer_complexslicelowerer_slice_proxy3;
-wire   [18:0] complexslicelowerer_rhs_slice_proxy0;
-wire   [18:0] complexslicelowerer_rhs_slice_proxy1;
-wire   [18:0] complexslicelowerer_rhs_slice_proxy2;
-wire   [18:0] complexslicelowerer_rhs_slice_proxy3;
-wire   [15:0] complexslicelowerer_slice_proxy0;
-wire   [15:0] complexslicelowerer_slice_proxy1;
-wire   [15:0] complexslicelowerer_slice_proxy2;
-wire   [15:0] complexslicelowerer_slice_proxy3;
 wire signed  [11:0] firgain_0i_d_delay;
 wire signed  [27:0] firgain_0i_mul_int0;
 wire signed  [27:0] firgain_0i_mul_int1;
@@ -129,6 +97,7 @@ reg  signed  [19:0] firgain_0i_nq_sum1 = 20'd0;
 reg  signed  [19:0] firgain_0i_nq_sum2 = 20'd0;
 reg  signed  [19:0] firgain_0i_nq_sum3 = 20'd0;
 reg  signed  [19:0] firgain_0i_nq_sum4 = 20'd0;
+reg    [15:0] firgain_0i_q_round = 16'd0;
 reg  signed  [15:0] firgain_0i_tap_c0 = 16'd52;
 reg  signed  [15:0] firgain_0i_tap_c1 = 16'd65459;
 reg  signed  [15:0] firgain_0i_tap_c10 = 16'd64533;
@@ -195,6 +164,7 @@ reg  signed  [19:0] firgain_0q_nq_sum1 = 20'd0;
 reg  signed  [19:0] firgain_0q_nq_sum2 = 20'd0;
 reg  signed  [19:0] firgain_0q_nq_sum3 = 20'd0;
 reg  signed  [19:0] firgain_0q_nq_sum4 = 20'd0;
+reg    [15:0] firgain_0q_q_round = 16'd0;
 reg  signed  [15:0] firgain_0q_tap_c0 = 16'd52;
 reg  signed  [15:0] firgain_0q_tap_c1 = 16'd65459;
 reg  signed  [15:0] firgain_0q_tap_c10 = 16'd64533;
@@ -210,20 +180,18 @@ reg  signed  [15:0] firgain_0q_tap_c6 = 16'd58523;
 reg  signed  [15:0] firgain_0q_tap_c7 = 16'd13118;
 reg  signed  [15:0] firgain_0q_tap_c8 = 16'd58523;
 reg  signed  [15:0] firgain_0q_tap_c9 = 16'd3349;
-wire   [18:0] rhs_slice_proxy0;
-wire   [18:0] rhs_slice_proxy1;
-wire   [15:0] slice_proxy0;
-wire   [18:0] slice_proxy1;
-wire   [15:0] slice_proxy2;
-wire   [18:0] slice_proxy3;
+wire   [16:0] slice_proxy0;
+wire   [16:0] slice_proxy1;
+wire   [16:0] slice_proxy2;
+wire   [16:0] slice_proxy3;
 
 //------------------------------------------------------------------------------
 // Combinatorial Logic
 //------------------------------------------------------------------------------
 
 assign o_stream0_v = i_stream0_v;
-assign o_stream0_i = (((((complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy0[15] != complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy2[14]) | (complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy4[15] != complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy6[13])) | (complexslicelowerer_complexslicelowerer_slice_proxy0[15] != complexslicelowerer_complexslicelowerer_slice_proxy1[12])) | (complexslicelowerer_slice_proxy0[15] != complexslicelowerer_slice_proxy1[11])) ? (slice_proxy0[15] ? 12'd4095 : 1'd0) : slice_proxy1[15:4]);
-assign o_stream0_q = (((((complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy8[15] != complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy10[14]) | (complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy12[15] != complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy14[13])) | (complexslicelowerer_complexslicelowerer_slice_proxy2[15] != complexslicelowerer_complexslicelowerer_slice_proxy3[12])) | (complexslicelowerer_slice_proxy2[15] != complexslicelowerer_slice_proxy3[11])) ? (slice_proxy2[15] ? 12'd4095 : 1'd0) : slice_proxy3[15:4]);
+assign o_stream0_i = (((((firgain_0i_q_round[15] != firgain_0i_q_round[14]) | (firgain_0i_q_round[15] != firgain_0i_q_round[13])) | (firgain_0i_q_round[15] != firgain_0i_q_round[12])) | (firgain_0i_q_round[15] != firgain_0i_q_round[11])) ? (firgain_0i_q_round[15] ? 12'd2048 : 11'd2047) : firgain_0i_q_round[11:0]);
+assign o_stream0_q = (((((firgain_0q_q_round[15] != firgain_0q_q_round[14]) | (firgain_0q_q_round[15] != firgain_0q_q_round[13])) | (firgain_0q_q_round[15] != firgain_0q_q_round[12])) | (firgain_0q_q_round[15] != firgain_0q_q_round[11])) ? (firgain_0q_q_round[15] ? 12'd2048 : 11'd2047) : firgain_0q_q_round[11:0]);
 assign firgain_0i_d_delay = i_stream0_i[11:0];
 assign firgain_0i_mul_int0 = (firgain_0i_d_delay * firgain_0i_tap_c0);
 assign firgain_0i_mul_int1 = (firgain_0i_ndelay0 * firgain_0i_tap_c1);
@@ -256,44 +224,10 @@ assign firgain_0q_mul_int11 = (firgain_0q_ndelay10 * firgain_0q_tap_c11);
 assign firgain_0q_mul_int12 = (firgain_0q_ndelay11 * firgain_0q_tap_c12);
 assign firgain_0q_mul_int13 = (firgain_0q_ndelay12 * firgain_0q_tap_c13);
 assign firgain_0q_mul_int14 = (firgain_0q_ndelay13 * firgain_0q_tap_c14);
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy1 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy0 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy1[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy3 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy2 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy3[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy5 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy4 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy5[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy7 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy6 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy7[18:3];
-assign complexslicelowerer_complexslicelowerer_rhs_slice_proxy0 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_slice_proxy0 = complexslicelowerer_complexslicelowerer_rhs_slice_proxy0[18:3];
-assign complexslicelowerer_complexslicelowerer_rhs_slice_proxy1 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_slice_proxy1 = complexslicelowerer_complexslicelowerer_rhs_slice_proxy1[18:3];
-assign complexslicelowerer_rhs_slice_proxy0 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_slice_proxy0 = complexslicelowerer_rhs_slice_proxy0[18:3];
-assign complexslicelowerer_rhs_slice_proxy1 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_slice_proxy1 = complexslicelowerer_rhs_slice_proxy1[18:3];
-assign rhs_slice_proxy0 = firgain_0i_nq_sum4[18:0];
-assign slice_proxy0 = rhs_slice_proxy0[18:3];
-assign slice_proxy1 = firgain_0i_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy9 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy8 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy9[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy11 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy10 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy11[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy13 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy12 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy13[18:3];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy15 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy14 = complexslicelowerer_complexslicelowerer_complexslicelowerer_slice_proxy15[18:3];
-assign complexslicelowerer_complexslicelowerer_rhs_slice_proxy2 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_slice_proxy2 = complexslicelowerer_complexslicelowerer_rhs_slice_proxy2[18:3];
-assign complexslicelowerer_complexslicelowerer_rhs_slice_proxy3 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_complexslicelowerer_slice_proxy3 = complexslicelowerer_complexslicelowerer_rhs_slice_proxy3[18:3];
-assign complexslicelowerer_rhs_slice_proxy2 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_slice_proxy2 = complexslicelowerer_rhs_slice_proxy2[18:3];
-assign complexslicelowerer_rhs_slice_proxy3 = firgain_0q_nq_sum4[18:0];
-assign complexslicelowerer_slice_proxy3 = complexslicelowerer_rhs_slice_proxy3[18:3];
-assign rhs_slice_proxy1 = firgain_0q_nq_sum4[18:0];
-assign slice_proxy2 = rhs_slice_proxy1[18:3];
-assign slice_proxy3 = firgain_0q_nq_sum4[18:0];
+assign slice_proxy0 = firgain_0i_nq_sum4[19:3];
+assign slice_proxy1 = firgain_0i_nq_sum4[19:3];
+assign slice_proxy2 = firgain_0q_nq_sum4[19:3];
+assign slice_proxy3 = firgain_0q_nq_sum4[19:3];
 
 
 //------------------------------------------------------------------------------
@@ -395,19 +329,22 @@ always @(posedge clock) begin
         firgain_0i_mul_q14 <= firgain_0i_mul_int14[27:8];
     end
     if (i_stream0_v) begin
-        firgain_0i_nq_sum0 <= (((((((((((((((1'd0 + {1'd1, firgain_0i_mul_q0}) + {1'd1, firgain_0i_mul_q1}) + {1'd1, firgain_0i_mul_q2}) + {1'd1, firgain_0i_mul_q3}) + {1'd1, firgain_0i_mul_q4}) + {1'd1, firgain_0i_mul_q5}) + {1'd1, firgain_0i_mul_q6}) + {1'd1, firgain_0i_mul_q7}) + {1'd1, firgain_0i_mul_q8}) + {1'd1, firgain_0i_mul_q9}) + {1'd1, firgain_0i_mul_q10}) + {1'd1, firgain_0i_mul_q11}) + {1'd1, firgain_0i_mul_q12}) + {1'd1, firgain_0i_mul_q13}) + {1'd1, firgain_0i_mul_q14});
+        firgain_0i_nq_sum0 <= (((((((((((((((1'd0 + {1'd0, firgain_0i_mul_q0}) + {1'd0, firgain_0i_mul_q1}) + {1'd0, firgain_0i_mul_q2}) + {1'd0, firgain_0i_mul_q3}) + {1'd0, firgain_0i_mul_q4}) + {1'd0, firgain_0i_mul_q5}) + {1'd0, firgain_0i_mul_q6}) + {1'd0, firgain_0i_mul_q7}) + {1'd0, firgain_0i_mul_q8}) + {1'd0, firgain_0i_mul_q9}) + {1'd0, firgain_0i_mul_q10}) + {1'd0, firgain_0i_mul_q11}) + {1'd0, firgain_0i_mul_q12}) + {1'd0, firgain_0i_mul_q13}) + {1'd0, firgain_0i_mul_q14});
     end
     if (i_stream0_v) begin
-        firgain_0i_nq_sum1 <= firgain_0i_nq_sum0[18:0];
+        firgain_0i_nq_sum1 <= firgain_0i_nq_sum0;
     end
     if (i_stream0_v) begin
-        firgain_0i_nq_sum2 <= firgain_0i_nq_sum1[18:0];
+        firgain_0i_nq_sum2 <= firgain_0i_nq_sum1;
     end
     if (i_stream0_v) begin
-        firgain_0i_nq_sum3 <= firgain_0i_nq_sum2[18:0];
+        firgain_0i_nq_sum3 <= firgain_0i_nq_sum2;
     end
     if (i_stream0_v) begin
-        firgain_0i_nq_sum4 <= firgain_0i_nq_sum3[18:0];
+        firgain_0i_nq_sum4 <= firgain_0i_nq_sum3;
+    end
+    if (i_stream0_v) begin
+        firgain_0i_q_round <= (slice_proxy0[16:1] + slice_proxy1[0]);
     end
     if (i_stream0_v) begin
         firgain_0q_ndelay0 <= firgain_0q_d_delay;
@@ -500,19 +437,22 @@ always @(posedge clock) begin
         firgain_0q_mul_q14 <= firgain_0q_mul_int14[27:8];
     end
     if (i_stream0_v) begin
-        firgain_0q_nq_sum0 <= (((((((((((((((1'd0 + {1'd1, firgain_0q_mul_q0}) + {1'd1, firgain_0q_mul_q1}) + {1'd1, firgain_0q_mul_q2}) + {1'd1, firgain_0q_mul_q3}) + {1'd1, firgain_0q_mul_q4}) + {1'd1, firgain_0q_mul_q5}) + {1'd1, firgain_0q_mul_q6}) + {1'd1, firgain_0q_mul_q7}) + {1'd1, firgain_0q_mul_q8}) + {1'd1, firgain_0q_mul_q9}) + {1'd1, firgain_0q_mul_q10}) + {1'd1, firgain_0q_mul_q11}) + {1'd1, firgain_0q_mul_q12}) + {1'd1, firgain_0q_mul_q13}) + {1'd1, firgain_0q_mul_q14});
+        firgain_0q_nq_sum0 <= (((((((((((((((1'd0 + {1'd0, firgain_0q_mul_q0}) + {1'd0, firgain_0q_mul_q1}) + {1'd0, firgain_0q_mul_q2}) + {1'd0, firgain_0q_mul_q3}) + {1'd0, firgain_0q_mul_q4}) + {1'd0, firgain_0q_mul_q5}) + {1'd0, firgain_0q_mul_q6}) + {1'd0, firgain_0q_mul_q7}) + {1'd0, firgain_0q_mul_q8}) + {1'd0, firgain_0q_mul_q9}) + {1'd0, firgain_0q_mul_q10}) + {1'd0, firgain_0q_mul_q11}) + {1'd0, firgain_0q_mul_q12}) + {1'd0, firgain_0q_mul_q13}) + {1'd0, firgain_0q_mul_q14});
     end
     if (i_stream0_v) begin
-        firgain_0q_nq_sum1 <= firgain_0q_nq_sum0[18:0];
+        firgain_0q_nq_sum1 <= firgain_0q_nq_sum0;
     end
     if (i_stream0_v) begin
-        firgain_0q_nq_sum2 <= firgain_0q_nq_sum1[18:0];
+        firgain_0q_nq_sum2 <= firgain_0q_nq_sum1;
     end
     if (i_stream0_v) begin
-        firgain_0q_nq_sum3 <= firgain_0q_nq_sum2[18:0];
+        firgain_0q_nq_sum3 <= firgain_0q_nq_sum2;
     end
     if (i_stream0_v) begin
-        firgain_0q_nq_sum4 <= firgain_0q_nq_sum3[18:0];
+        firgain_0q_nq_sum4 <= firgain_0q_nq_sum3;
+    end
+    if (i_stream0_v) begin
+        firgain_0q_q_round <= (slice_proxy2[16:1] + slice_proxy3[0]);
     end
     if (reset) begin
         o_stream1_v <= 1'd0;
@@ -553,6 +493,7 @@ always @(posedge clock) begin
         firgain_0i_nq_sum2 <= 20'd0;
         firgain_0i_nq_sum3 <= 20'd0;
         firgain_0i_nq_sum4 <= 20'd0;
+        firgain_0i_q_round <= 16'd0;
         firgain_0q_ndelay0 <= 12'd0;
         firgain_0q_mul_q0 <= 20'd0;
         firgain_0q_ndelay1 <= 12'd0;
@@ -588,6 +529,7 @@ always @(posedge clock) begin
         firgain_0q_nq_sum2 <= 20'd0;
         firgain_0q_nq_sum3 <= 20'd0;
         firgain_0q_nq_sum4 <= 20'd0;
+        firgain_0q_q_round <= 16'd0;
     end
 end
 
@@ -599,5 +541,5 @@ end
 endmodule
 
 // -----------------------------------------------------------------------------
-//  Auto-Generated by LiteX on 2025-11-29 14:35:46.
+//  Auto-Generated by LiteX on 2025-11-29 15:17:03.
 //------------------------------------------------------------------------------

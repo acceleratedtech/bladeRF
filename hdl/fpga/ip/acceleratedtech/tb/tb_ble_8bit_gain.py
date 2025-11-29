@@ -19,6 +19,9 @@ TEST_CONFIG = TestConfig(
 
 async def do_clock_and_reset(dut):
     cocotb.start_soon(Clock(dut.clock, 10,"ns").start()) # 100MHz
+    dut.i_stream0_v.value = 1
+    dut.i_stream0_i.value = 0
+    dut.i_stream0_q.value = 0
     dut.reset.value = 0
     await Timer(1, "us")
     dut.reset.value = 1
@@ -35,7 +38,10 @@ def s12_to_f32(s12):
 
 def f32_to_s12(f32):
     s12 = math.trunc(f32 * 2**11)
-    assert(s12 >= -2048 and s12 <= 2047)
+    if s12 < -2048:
+        s12 = -2048
+    if s12 > 2047:
+        s12 = 2047
     if s12 < 0:
         s12 += 2 ** 12
     return s12
@@ -57,7 +63,7 @@ async def xchg_sample_f32(dut, samp):
     return s12_to_f32(await xchg_sample(dut, f32_to_s12(samp)))
 
 class FirChecker:
-    def __init__(self, clk, d, q, taps, latency = 7):
+    def __init__(self, clk, d, q, taps, latency = 8):
         self.clk = clk
         self.d = d
         self.q = q
@@ -67,7 +73,7 @@ class FirChecker:
         self.failures = 0
         self.cycles = 0
         self.failures_max = 20
-        self.tolerance = 2 / (2 ** 11)
+        self.tolerance = 2
     
     async def run(self):
         d_buf = deque([ 0.0 for _ in self.taps ])
@@ -85,9 +91,11 @@ class FirChecker:
             
             # now check Q for realsies
             q_delay = latency_buf[0]
-            q_f32 = s12_to_f32(self.q.value)
+            q_delay_s12 = f32_to_s12(q_delay)
+            q_s12 = int(self.q.value)
+            q_f32 = s12_to_f32(q_s12)
             
-            delta = abs(q_f32 - q_delay)
+            delta = abs(q_s12 - q_delay_s12)
             
             if delta > self.tolerance:
                 self.failures += 1
@@ -109,6 +117,25 @@ async def test_dc_equiv(dut):
     
     for _ in range(24):
         await xchg_sample_f32(dut, 0.4)
+    
+    if checker.failures:
+        raise AssertionError("too many mismatches")
+
+@cocotb.test()
+async def test_clipping(dut):
+    await do_clock_and_reset(dut)
+    
+    checker = FirChecker(dut.clock, dut.i_stream0_i, dut.o_stream0_i, ble_8bit_gain.FirGain.TAPS)
+    cocotb.start_soon(checker.run())
+
+    for _ in range(16):
+        await xchg_sample_f32(dut, 0)
+    
+    for _ in range(24):
+        await xchg_sample_f32(dut, 0.8)
+
+    for _ in range(24):
+        await xchg_sample_f32(dut, -0.8)
     
     if checker.failures:
         raise AssertionError("too many mismatches")
