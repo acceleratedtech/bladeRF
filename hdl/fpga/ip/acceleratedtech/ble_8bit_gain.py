@@ -5,6 +5,20 @@ from litex.gen.fhdl import verilog
 
 from litex.gen import LiteXModule
 
+import numpy as np
+from scipy import signal
+
+def compute_taps():
+    fs = 96e6
+    freqs = np.array([0e6, 10e6, 18e6, 20e6, 23e6, 28.1e6, 34.5e6, 37.5e6, 41.1e6, 44.3e6, 47e6, 48e6])
+    gains = np.array([  0,    0,    0,    1,    1,      2,      3,     4,       6,      8,    8,    8])
+    gains_db = gains
+    gains = 10**(gains / 20)
+
+    taps = signal.firwin2(15, freqs, gains, fs = fs)
+    print(taps)
+    return [tap for tap in taps]
+
 class FirGain(LiteXModule):
     TAPS_HEAVY = [
         -0.02916985,
@@ -30,7 +44,9 @@ class FirGain(LiteXModule):
         0.81767817, -1.71217123,  3.20280773, -1.71217123,  0.81767817,
        -0.24487562,  0.03090074,  0.01903052, -0.01885119,  0.01281782]
     
-    TAPS = TAPS_LIGHT
+    TAPS_LIGHTER = compute_taps()
+    
+    TAPS = TAPS_LIGHTER
     
     # signed, SN.M format
     TAP_N = 3  # bits before decimal
